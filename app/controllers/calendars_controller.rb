@@ -2,7 +2,6 @@ class CalendarsController < ApplicationController
 
   # １週間のカレンダーと予定が表示されるページ
   def index
-    # Issue2 コード上の命名規則修正
     get_week
     @plan = Plan.new
   end
@@ -15,10 +14,10 @@ class CalendarsController < ApplicationController
 
   private
 
-  def plan_params
-    params.require(:calendars).permit(:date, :plan)
+  def plan_params #Issue4 修正箇所 calendars -> plan
+    params.require(:plan).permit(:date, :plan)
   end
-  # Issue2 コード上の命名規則修正
+
   def get_week
     wdays = ['(日)','(月)','(火)','(水)','(木)','(金)','(土)']
 
@@ -33,10 +32,8 @@ class CalendarsController < ApplicationController
     7.times do |x|
       today_plans = []
       plans.each do |plan|
-        #if ?
         today_plans.push(plan.plan) if plan.date == @todays_date + x
       end
-      # Issue1 ハッシュロケット -> シンボル型へ変更
       days = { month: (@todays_date + x).month, date: (@todays_date+x).day, plans: today_plans }
       @week_days.push(days)
     end
